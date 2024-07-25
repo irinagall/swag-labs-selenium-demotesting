@@ -12,11 +12,18 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.Duration;
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Actions;
+
 
 public class SwagLabTests {
     //ChromeDriver
@@ -141,4 +148,55 @@ public class SwagLabTests {
         MatcherAssert.assertThat(inventoryItems.size(), is(6));
     }
 
+
+    @Test
+    @DisplayName("Web scraping demo")
+    public void retrieveProductInfo() throws IOException {
+        // Navigate to the sauce labs demo site
+        webDriver.get("https://www.saucedemo.com");
+
+        // Find the username field and enter text
+        WebElement usernameField = webDriver.findElement(By.id("user-name"));
+        usernameField.sendKeys("standard_user");
+
+        // Find the password field, enter text, press enter
+        WebElement passwordField = webDriver.findElement(By.id("password"));
+        passwordField.sendKeys("secret_sauce", Keys.ENTER);
+
+
+        // Find all product elements on the page
+        List<WebElement> products = webDriver.findElements(By.className("inventory_item"));
+
+        // Write product information to a file
+        try (PrintWriter writer = new PrintWriter(new FileWriter("products.txt"))) {
+            //iterate through each webElement in products, get the name and price, write it to a text file and then print out
+            for (WebElement product : products) {
+                WebElement nameElement = product.findElement(By.className("inventory_item_name"));
+                WebElement priceElement = product.findElement(By.className("inventory_item_price"));
+                String productInfo = nameElement.getText() + ": " + priceElement.getText();
+                writer.println(productInfo);
+                System.out.println(productInfo);
+            }
+        }
+        MatcherAssert.assertThat(products.size(), is(6));
+    }
+
+    @Test
+    @DisplayName("Given I am on the Drag and Drop page, when I drag Box A to Box B, then the boxes have switched positions")
+    public void dragAndDropTests() throws InterruptedException {
+        // Navigate to the page
+        webDriver.get("https://demoqa.com/droppable/");
+
+        // Find elements for dragging and dropping
+        WebElement columnA = webDriver.findElement(By.id("draggable"));
+        WebElement columnB = webDriver.findElement(By.id("droppable"));
+
+        // Perform drag and drop action
+        Actions action = new Actions(webDriver);
+        action.dragAndDrop(columnA, columnB).perform();
+
+        // Assert that the text of columnB has changed to "Dropped!"
+        MatcherAssert.assertThat(columnB.getText(), is("Dropped!"));
+
+    }
 }
