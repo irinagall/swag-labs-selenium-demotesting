@@ -103,4 +103,22 @@ public class SwagLabTests_POM extends TestSetup {
     }
 
 
+    @Test
+    @DisplayName("Given I am on the inventory page, when I click on a product name, then I should be taken to the product details page")
+    public void clickingProductNameNavigatesToDetailsPage() {
+        // Arrange
+        website = getWebsite(BASE_URL);
+        website.getHomePage().loginWithValidCredentials("standard_user", "secret_sauce");
+        website.getInventoryPage().waitForPageLoad();
+
+        // Act
+        String productName = website.getInventoryPage().getProductName(0);
+        website.getInventoryPage().clickProductName(0);
+
+        // Assert
+        Assertions.assertTrue(website.getCurrentUrl().contains("inventory-item.html"), "URL should contain 'inventory-item.html'");
+        Assertions.assertEquals(productName, website.getProductPage().getProductName(), "Product name on details page should match the clicked product");
+    }
+
+
 }

@@ -7,11 +7,13 @@ public class Website {
     private HomePage  homePage;
     private WebDriver webDriver;
     private InventoryPage inventoryPage;
+    private ProductPage productPage;
 
     public Website(WebDriver webDriver) {
         this.webDriver = webDriver;
         this.homePage = new HomePage(webDriver);
         this.inventoryPage = new InventoryPage(webDriver);
+        this.productPage = new ProductPage(webDriver);
     }
 
     public HomePage getHomePage() {
@@ -27,5 +29,9 @@ public class Website {
 
     public InventoryPage getInventoryPage(){
         return inventoryPage;
+    }
+
+    public ProductPage getProductPage() {
+        return productPage;
     }
 }
