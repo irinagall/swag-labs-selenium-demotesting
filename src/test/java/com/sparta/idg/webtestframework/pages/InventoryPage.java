@@ -16,7 +16,11 @@ public class InventoryPage {
     private WebDriverWait wait;
 
     private By basketCountLocator = By.className("shopping_cart_badge");
-    private By addToCartButtonLocator = By.xpath("//button[starts-with(@id, 'add-to-cart')]");
+   // private By addToCartButtonLocator = By.xpath("//button[starts-with(@id, 'add-to-cart')]");
+    private By addToCartButtonLocator = By.cssSelector("button[id^='add-to-cart']");
+    //private By removeFromCartButtonLocator = By.xpath("//button[starts-with(@id, 'remove-')]");
+    private By removeFromCartButtonLocator = By.cssSelector("button[id^='remove-']");
+
 
     public InventoryPage(WebDriver webDriver) {
         this.webDriver = webDriver;
@@ -36,7 +40,7 @@ public class InventoryPage {
 
     public void addItemToBasket(int index){
         List<WebElement> addToCartButtons = webDriver.findElements(addToCartButtonLocator);
-        if(index>= 0 && index <addToCartButtons.size()){
+        if(index>= 0 && index < addToCartButtons.size()){
             addToCartButtons.get(index).click();
         } else {
             throw new IllegalArgumentException("Invalid item index");
@@ -48,6 +52,15 @@ public class InventoryPage {
             return Integer.parseInt(webDriver.findElement(basketCountLocator).getText());
         } catch (NoSuchElementException exception) {
             return 0;
+        }
+    }
+
+    public void removeItemFromBasket(int index) {
+        List<WebElement> removeFromCartButtons = webDriver.findElements(removeFromCartButtonLocator);
+        if (index>= 0 && index < removeFromCartButtons.size()) {
+            removeFromCartButtons.get(index).click();
+        } else {
+            throw new IllegalArgumentException("Invalid item index:" +  index);
         }
     }
 }

@@ -2,6 +2,10 @@ package com.sparta.idg.webtestframework.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class HomePage {
     private WebDriver webDriver;
@@ -29,5 +33,17 @@ public class HomePage {
 
     public String getErrorMessage(){
         return webDriver.findElement(this.errorMessage).getText();
+    }
+
+    public void loginWithValidCredentials(String validUsername, String validPassword) {
+        enterUsername(validUsername);
+        enterPassword(validPassword);
+        clickLoginButton();
+        waitForLoginToComplete();
+    }
+
+    private void waitForLoginToComplete() {
+        WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.urlContains("inventory.html"));
     }
 }

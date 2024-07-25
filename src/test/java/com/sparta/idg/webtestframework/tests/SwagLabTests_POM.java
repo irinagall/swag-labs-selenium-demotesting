@@ -84,5 +84,23 @@ public class SwagLabTests_POM extends TestSetup {
 
     }
 
+    @Test
+    @DisplayName("Given I have items in the cart, when I remove it, then the cart should decrese by 1")
+    public void removingItemDecreasesCartCount(){
+        //Arange
+        website = getWebsite(BASE_URL);
+        website.getHomePage().loginWithValidCredentials("standard_user", "secret_sauce");
+        website.getInventoryPage().waitForPageLoad();
+        website.getInventoryPage().addItemToBasket(0);
+        int initialCardCount = website.getInventoryPage().getBasketCount();
+
+        //Act
+        website.getInventoryPage().removeItemFromBasket(0);
+
+        //Assert
+        int newCartCount = website.getInventoryPage().getBasketCount();
+        Assertions.assertEquals(initialCardCount -1, newCartCount);
+    }
+
 
 }
